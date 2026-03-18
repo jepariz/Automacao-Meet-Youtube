@@ -8,8 +8,9 @@ Isso resolve dois problemas clássicos do ecossistema gratuito do Google Apps Sc
 - O limite de tempo máximo de execução contínua de 6 minutos.
 
 ## O que o script faz
-- Monitora a pasta do Drive e identifica apenas arquivos de vídeo MP4 (ignora listas de presença e documentos).
+- Monitora a pasta do Drive e identifica apenas arquivos de vídeo MP4 (ignora listas de presença e documentos em texto).
 - Limpa o nome padrão do Meet e padroniza o título para o formato: Título da Aula - RX - DD-MM-AAAA.
+- Trava de segurança: Se o título ultrapassar 95 letras, o script faz um corte automático e insere reticências no final para que o YouTube não bloqueie o envio.
 - Fatiamento: Pega o vídeo no Drive e envia para o YouTube em pedaços de 5 MB.
 - Relógio interno: Aos 4 minutos de execução, o script pausa o trabalho, salva o progresso e cria um alarme para acordar 1 minuto depois e continuar de onde parou.
 - Ao finalizar os 100%, insere o vídeo como Não Listado na playlist e move o arquivo original para uma pasta de processados.
@@ -17,9 +18,9 @@ Isso resolve dois problemas clássicos do ecossistema gratuito do Google Apps Sc
 ## Passo 1: Coletando as informações necessárias
 Antes de ir para o código, separe três IDs cruciais:
 
-1. ID da pasta Meet Recordings: Vá ao seu Google Drive, abra a pasta das gravações e olhe a barra de endereços do navegador. Copie apenas o código que aparece depois de "folders/".
+1. ID da pasta Meet Recordings: Vá ao seu Google Drive, abra a pasta das gravações e olhe a barra de endereços do navegador. Copie apenas o código que aparece depois de folders/.
 2. ID da pasta de processados: Crie uma pasta no Drive para os vídeos já enviados. Copie o ID dela na barra de endereços, igual ao passo anterior.
-3. ID da Playlist do YouTube: Abra a playlist no YouTube. Na barra de endereços, copie o código logo depois de "list=" (começa com PL).
+3. ID da Playlist do YouTube: Abra a playlist no YouTube. Na barra de endereços, copie o código logo depois de list= (começa com PL).
 
 ## Passo 2: Criando o projeto e ativando as APIs
 1. Acesse script.google.com e faça login.
@@ -70,6 +71,11 @@ function gerenciarUpload() {
       var mes = ("0" + (dataCriacao.getMonth() + 1)).slice(-2);
       var ano = dataCriacao.getFullYear();
       tituloLimpo = partes[0] + ' - ' + partes[1] + ' - ' + dia + '-' + mes + '-' + ano;
+    }
+
+    // Trava de segurança para o limite de 100 caracteres do YouTube
+    if (tituloLimpo.length > 95) {
+      tituloLimpo = tituloLimpo.substring(0, 95) + '...';
     }
 
     var token = ScriptApp.getOAuthToken();
@@ -186,6 +192,10 @@ function limparGatilhos() {
   }
 }
 
+function limparRastros() {
+  PropertiesService.getUserProperties().deleteAllProperties();
+  limparGatilhos();
+}
 function limparRastros() {
   PropertiesService.getUserProperties().deleteAllProperties();
   limparGatilhos();
