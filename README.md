@@ -1,4 +1,4 @@
-# Automa-o-Meet-Youtube
+# Automacao-Meet-Youtube
 
 Sobre o Projeto
 Este script automatiza o envio de gravações longas do Google Meet (salvas no Google Drive) diretamente para uma playlist específica no YouTube. O grande diferencial deste código é a implementação de Resumable Uploads (upload em fatias).
