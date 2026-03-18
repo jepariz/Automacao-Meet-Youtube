@@ -84,7 +84,7 @@ function gerenciarUpload() {
       status: { privacyStatus: 'unlisted' }
     };
 
-    var urlInicio = "[https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status](https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status)";
+    var urlInicio = "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status";
     var opcoesInicio = {
       method: "post",
       contentType: "application/json",
@@ -127,7 +127,7 @@ function gerenciarUpload() {
       fimByte = tamanhoTotal - 1;
     }
 
-    var urlDrive = "[https://www.googleapis.com/drive/v3/files/](https://www.googleapis.com/drive/v3/files/)" + idArquivo + "?alt=media";
+    var urlDrive = "https://www.googleapis.com/drive/v3/files/" + idArquivo + "?alt=media";
     var opcoesDrive = {
       headers: {
         "Authorization": "Bearer " + token,
